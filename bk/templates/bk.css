@@ -1,0 +1,28 @@
+body {
+    background-image: url('https://thumbs.gfycat.com/AstonishingPinkBelugawhale-size_restricted.gif');
+    background-size: cover;
+
+    height: 100vh;
+    padding:0;
+    margin:0;
+    overflow:scroll;
+}
+
+.menu {
+    background-color:rgba(150, 150, 150, 0.5);
+    text-align:center;
+    border: 2px solid rgba(150, 150, 150, 0.5);
+    padding: 50px;
+    width:fit-content;
+    height:fit-content;
+    margin:auto;
+
+}
+
+.kyle {
+    color:blue;
+}
+
+.baylee {
+    color:magenta;
+}

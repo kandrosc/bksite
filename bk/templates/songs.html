@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="bk.css">
+    </head>
+
+
+    <body>
+        <div class="menu">
+            <h2>Our Favorite Songs</h2>
+            <ul>
+                {%autoescape off%}
+                {{songs}}
+                {%endautoescape%}
+            </ul>
+            <a href="{%url 'songs_upload'%}">New</a>
+            <br>
+            <a href = "{%url 'index' %}">Back to Homepage</a>
+        </div>
+
+
+
+    </body>
+</html>

@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="../bk.css">
+    </head>
+
+
+    <body>
+        <div class="menu">
+            <form method="POST" action="{%url 'songs' %}">
+                {% csrf_token %}
+                <input type="radio" id="baylee" name="who" value="baylee" checked=true>
+                <label for="baylee">Baylee</label><br>
+                <input type="radio" id="kyle" name="who" value="kyle">
+                <label for="kyle">Kyle</label><br>
+                <p>YouTube URL:</p>
+                <input name="url">
+                <br>
+                <input type="submit" name="Upload">
+                </form>>
+            <a href = "{%url 'index' %}">Back to Homepage</a>
+        </div>
+
+
+
+    </body>
+</html>
