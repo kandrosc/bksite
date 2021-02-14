@@ -26,3 +26,7 @@ body {
 .baylee {
     color:magenta;
 }
+
+.picture {
+    object-fit: contain;
+  }

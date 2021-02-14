@@ -15,6 +15,6 @@ urlpatterns = [
   path('things/upload',views.things_upload,name='things_upload'),
   path('memories/upload',views.memories_upload,name='memories_upload'),
 
-
+  path("images/<int:image_num>",views.image,name='image'),
   path('bk.css',views.css,name='css')
 ]

@@ -2,6 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils.datastructures import MultiValueDictKeyError
 import os,json
+from os import listdir
+from os.path import isfile, join
+from django.core.mail import send_mail
+
 
 FILEPATH = os.path.dirname(os.path.abspath(__file__))+"/"
 
@@ -11,7 +15,24 @@ def index(request):
     return render(request,"index.html")
 
 def pictures(request):
-    return render(request,"pictures.html")
+    data = request.POST
+    files = request.FILES
+    pictures = sorted([f.split(".")[0] for f in listdir(FILEPATH+"/static/images/") if isfile(join(FILEPATH+"/static/images/", f))])
+    try:
+        uploaded_picture = files["picture"].read()
+        print(uploaded_picture)
+        newnum = str(int(pictures[-1])+1)
+        with open(FILEPATH+"/static/images/{}.jpg".format(newnum),"wb") as f: f.write(uploaded_picture)
+        pictures.append(newnum)
+        
+    except MultiValueDictKeyError: pass
+    path = request.build_absolute_uri().replace("pictures","images")
+    
+    elms = ""
+    for p in pictures:
+        elms += '<li><img class="picture" src="{}" width="420" height="315"></li>'.format(path+"/"+p)
+
+    return render(request,"pictures.html",{"pictures":elms})
 
 def songs(request):
     data = request.POST
@@ -41,10 +62,34 @@ def activities(request):
     return render(request,"activities.html",{"activities":elms})
 
 def things(request):
-    return render(request,"things.html")
+    data = request.POST
+    with open(FILEPATH+"static/things.json","r") as f: things = json.load(f)
+    try:
+        newindex = str(int(list(things.keys())[-1])+1)
+        things[newindex] = {"name":data["who"],"thing":data["thing"]}
+        with open(FILEPATH+"static/things.json","w") as f: json.dump(things,f)
+    except MultiValueDictKeyError: pass
+    elms = ""
+    for i in things:
+        name, thing = things[i]["name"], things[i]["thing"]
+        elms += '<li class="{0}">{1}</li>'.format(name,thing)
+
+    return render(request,"things.html",{"things":elms})
 
 def memories(request):
-    return render(request,"memories.html")
+    data = request.POST
+    with open(FILEPATH+"static/memories.json","r") as f: memories = json.load(f)
+    try:
+        newindex = str(int(list(memories.keys())[-1])+1)
+        memories[newindex] = {"name":data["who"],"memory":data["memory"]}
+        with open(FILEPATH+"static/memories.json","w") as f: json.dump(memories,f)
+    except MultiValueDictKeyError: pass
+    elms = ""
+    for i in memories:
+        name, memory = memories[i]["name"], memories[i]["memory"]
+        elms += '<li class="{0}">{1}</li>'.format(name,memory)
+
+    return render(request,"memories.html",{"memories":elms})
 
 
 
@@ -66,6 +111,17 @@ def things_upload(request):
 def memories_upload(request):
     return render(request,"memories_upload.html")
 
+
+def image(request,image_num):
+    pictures = [f for f in listdir(FILEPATH+"/static/images/") if isfile(join(FILEPATH+"/static/images/", f))]
+    for p in pictures:
+        if int(p.split(".")[0]) == image_num:
+            picture = p
+            break
+    with open(FILEPATH+"/static/images/"+picture,"rb") as f: pfile = f.read()
+    response = HttpResponse(pfile)
+    response["content-type"] = "image/jpeg"
+    return response
 
 
 def css(request):

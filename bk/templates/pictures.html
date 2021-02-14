@@ -6,6 +6,14 @@
 
     <body>
         <div class="menu">
+            <h2>Pictures of Us</h2>
+            <ul>
+                {%autoescape off%}
+                {{pictures}}
+                {%endautoescape%}
+            </ul>
+            <a href="{%url 'pictures_upload'%}">New</a>
+            <br>
             <a href = "{%url 'index' %}">Back to Homepage</a>
         </div>
 
