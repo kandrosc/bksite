@@ -11,6 +11,12 @@ FILEPATH = os.path.dirname(os.path.abspath(__file__))+"/"
 
 # Create your views here.
 
+def notify(update,name):
+    c = lambda x: x[0].upper() + x[1:]
+    to_email = "kandrosc@ualberta.ca" if name == "baylee" else "baylee1@ualberta.ca"
+    send_mail("Baylee and Kyle's Internet Home",c(name)+" has added a new "+update+"!","bksite3@gmail.com",[to_email],fail_silently=False,)
+
+
 def index(request):
     return render(request,"index.html")
 
@@ -24,7 +30,7 @@ def pictures(request):
         newnum = str(int(pictures[-1])+1)
         with open(FILEPATH+"/static/images/{}.jpg".format(newnum),"wb") as f: f.write(uploaded_picture)
         pictures.append(newnum)
-        
+        notify("picture",data["who"])
     except MultiValueDictKeyError: pass
     path = request.build_absolute_uri().replace("pictures","images")
     
@@ -40,10 +46,11 @@ def songs(request):
     try:
         songs.append(data["url"].replace("watch?v=","embed/"))
         with open(FILEPATH+"static/songs.txt","w") as f: f.write("\n".join(songs))
+        notify("song",data["who"])
     except MultiValueDictKeyError: pass
     elms = ""
     for url in songs:
-        elms += '<li><iframe width="420" height="315" src="{}"></iframe></li>'.format(url)
+        elms += '<li><iframe width="420" height="315" src="{}" frameborder="0" gesture="media" allow="autoplay; encrypted-media" allowfullscreen></iframe></li>'.format(url)
     return render(request,"songs.html",{"songs":elms})
 
 def activities(request):
@@ -53,6 +60,7 @@ def activities(request):
         newindex = str(int(list(act.keys())[-1])+1)
         act[newindex] = {"name":data["who"],"activity":data["activity"]}
         with open(FILEPATH+"static/activities.json","w") as f: json.dump(act,f)
+        notify("activity",data["who"])
     except MultiValueDictKeyError: pass
     elms = ""
     for i in act:
@@ -68,6 +76,7 @@ def things(request):
         newindex = str(int(list(things.keys())[-1])+1)
         things[newindex] = {"name":data["who"],"thing":data["thing"]}
         with open(FILEPATH+"static/things.json","w") as f: json.dump(things,f)
+        notify("thing they love",data["who"])
     except MultiValueDictKeyError: pass
     elms = ""
     for i in things:
@@ -83,6 +92,7 @@ def memories(request):
         newindex = str(int(list(memories.keys())[-1])+1)
         memories[newindex] = {"name":data["who"],"memory":data["memory"]}
         with open(FILEPATH+"static/memories.json","w") as f: json.dump(memories,f)
+        notify("memory",data["who"])
     except MultiValueDictKeyError: pass
     elms = ""
     for i in memories:
